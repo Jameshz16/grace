@@ -23,12 +23,14 @@ export default function Hero() {
           muted
           loop
           playsInline
+          preload="auto"
           className="w-full h-full object-cover opacity-80"
         >
           <source
-            src="/src/assets/florida.mp4"
+            src="/florida.mp4"
             type="video/mp4"
           />
+          Your browser does not support the video tag.
         </video>
         <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/60 to-black/50"></div>
         <div className="absolute inset-0 bg-black/20"></div>
