@@ -1,99 +1,114 @@
-import { useState } from 'react';
-import { Send, Phone, Mail, MapPin, MessageCircle } from 'lucide-react';
+import { useState } from "react";
+import { Send, Phone, Mail, MapPin } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function ContactForm() {
+  const { t } = useLanguage();
+
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    service: '',
-    message: ''
+    name: "",
+    email: "",
+    phone: "",
+    service: "",
+    message: "",
   });
 
-  const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   const validateForm = () => {
-    const newErrors: {[key: string]: string} = {};
-    
+    const newErrors: { [key: string]: string } = {};
+
     if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = t("contact.errors.name");
     }
-    
+
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = t("contact.errors.email");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+      newErrors.email = t("contact.errors.emailInvalid");
     }
-    
+
     if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone is required';
+      newErrors.phone = t("contact.errors.phone");
     }
-    
+
     if (!formData.service) {
-      newErrors.service = 'Please select a service';
+      newErrors.service = t("contact.errors.service");
     }
-    
+
     if (!formData.message.trim()) {
-      newErrors.message = 'Message is required';
+      newErrors.message = t("contact.errors.message");
     }
-    
+
     return newErrors;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-    
+
     setIsSubmitting(true);
-    const serviceLabels: {[key: string]: string} = {
-      compra: 'Property Purchase',
-      venta: 'Property Sale',
-      gestion: 'Management and Leasing',
-      corporativo: 'Corporate Services',
-      legal: 'Legal Services',
-      proyecto: 'Custom Projects',
-      consulta: 'General Consultation'
+    const serviceLabels: { [key: string]: string } = {
+      compra: t("contact.form.services.purchase"),
+      venta: t("contact.form.services.sale"),
+      gestion: t("contact.form.services.management"),
+      corporativo: t("contact.form.services.corporate"),
+      legal: t("contact.form.services.legal"),
+      proyecto: t("contact.form.services.project"),
+      consulta: t("contact.form.services.consultation"),
     };
-    const subject = 'New Consultation Request';
-    const body = `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nService: ${serviceLabels[formData.service] || 'N/A'}\nMessage:\n${formData.message}`;
-    const mailtoUrl = `mailto:graceviz2001@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const subject = "New Consultation Request";
+    const body = `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${
+      formData.phone
+    }\nService: ${serviceLabels[formData.service] || "N/A"}\nMessage:\n${
+      formData.message
+    }`;
+    const mailtoUrl = `mailto:graceviz2001@gmail.com?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
     window.location.href = mailtoUrl;
     setIsSubmitting(false);
     setIsSubmitted(true);
-    setFormData({ name: '', email: '', phone: '', service: '', message: '' });
+    setFormData({ name: "", email: "", phone: "", service: "", message: "" });
     setTimeout(() => {
       setIsSubmitted(false);
     }, 5000);
   };
 
   const handleWhatsApp = () => {
-    const message = "Hello, I would like to schedule a free consultation about real estate in Florida.";
-    const whatsappUrl = `https://wa.me/17542043713?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    const message = t("nav.whatsappMessage");
+    const whatsappUrl = `https://wa.me/17542043713?text=${encodeURIComponent(
+      message
+    )}`;
+    window.open(whatsappUrl, "_blank");
   };
 
   const handleCall = () => {
-    window.location.href = 'tel:+17542043713';
+    window.location.href = "tel:+17542043713";
   };
 
   const handleEmail = () => {
-    window.location.href = 'mailto:graceviz2001@gmail.com';
+    window.location.href = "mailto:graceviz2001@gmail.com";
   };
 
   return (
@@ -102,54 +117,57 @@ export default function ContactForm() {
       className="relative py-20 text-white bg-cover bg-center overflow-hidden"
       style={{
         backgroundImage:
-          'url(https://images.unsplash.com/photo-1501183638710-841dd1904471?q=80&w=1920&auto=format&fit=crop)'
+          "url(https://images.unsplash.com/photo-1501183638710-841dd1904471?q=80&w=1920&auto=format&fit=crop)",
       }}
     >
       <div className="absolute inset-0 bg-black/60"></div>
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif font-bold mb-4">
-            Start Your Real Estate Investment Today
+            {t("contact.title")}
           </h2>
           <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-            Schedule a free consultation with no obligation. We'll guide you through every step of the process.
+            {t("contact.subtitle")}
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Info */}
           <div>
-            <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
-            
+            <h3 className="text-2xl font-bold mb-6">
+              {t("contact.infoTitle")}
+            </h3>
+
             <div className="space-y-6 mb-8">
               <div className="flex items-center space-x-4">
                 <div className="bg-blue-700 p-3 rounded-full">
                   <Phone className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="font-semibold">Phone</div>
+                  <div className="font-semibold">{t("contact.phone")}</div>
                   <div className="text-blue-100">754-204-3713</div>
                 </div>
               </div>
-              
+
               <div className="flex items-center space-x-4">
                 <div className="bg-blue-700 p-3 rounded-full">
                   <Mail className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="font-semibold">Email</div>
+                  <div className="font-semibold">{t("contact.email")}</div>
                   <div className="text-blue-100">graceviz2001@gmail.com</div>
                 </div>
               </div>
-              
+
               <div className="flex items-center space-x-4">
                 <div className="bg-blue-700 p-3 rounded-full">
                   <MapPin className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="font-semibold">Main Office</div>
+                  <div className="font-semibold">{t("contact.office")}</div>
                   <div className="text-blue-100">
-                    1200 S. Pine Island Rd Suite 600<br />
+                    1200 S. Pine Island Rd Suite 600
+                    <br />
                     Plantation, FL 33324
                   </div>
                 </div>
@@ -162,22 +180,26 @@ export default function ContactForm() {
                 onClick={handleWhatsApp}
                 className="bg-green-500 hover:bg-green-600 active:bg-green-700 text-white py-4 px-6 rounded-lg font-bold transition-all duration-200 active:scale-95 active:shadow-inner flex items-center justify-center"
               >
-                <MessageCircle className="w-5 h-5 mr-2" />
-                Direct WhatsApp
+                <img
+                  src="/whatsapp-svgrepo-com.svg"
+                  alt="WhatsApp"
+                  className="w-5 h-5 mr-2"
+                />
+                {t("contact.buttons.whatsapp")}
               </button>
               <button
                 onClick={handleCall}
                 className="bg-blue-700 hover:bg-blue-600 active:bg-blue-800 text-white py-3 px-4 rounded-lg font-bold transition-all duration-200 active:scale-95 active:shadow-inner flex items-center justify-center"
               >
                 <Phone className="w-4 h-4 mr-2" />
-                Call Now
+                {t("contact.buttons.call")}
               </button>
               <button
                 onClick={handleEmail}
                 className="bg-blue-700 hover:bg-blue-600 active:bg-blue-800 text-white py-3 px-4 rounded-lg font-bold transition-all duration-200 active:scale-95 active:shadow-inner flex items-center justify-center"
               >
                 <Mail className="w-4 h-4 mr-2" />
-                Send Email
+                {t("contact.buttons.email")}
               </button>
             </div>
           </div>
@@ -189,16 +211,19 @@ export default function ContactForm() {
                 <div className="text-green-600 mb-4">
                   <Send size={48} className="mx-auto" />
                 </div>
-                <h3 className="text-2xl font-bold mb-2">Thank You!</h3>
-                <p className="text-gray-600">
-                  Your message has been sent successfully. We will contact you within 24 hours.
-                </p>
+                <h3 className="text-2xl font-bold mb-2">
+                  {t("contact.form.successTitle")}
+                </h3>
+                <p className="text-gray-600">{t("contact.form.successText")}</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                    Full Name *
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    {t("contact.form.name")}
                   </label>
                   <input
                     type="text"
@@ -207,9 +232,9 @@ export default function ContactForm() {
                     value={formData.name}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 border rounded-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent ${
-                      errors.name ? 'border-red-500' : 'border-gray-300'
+                      errors.name ? "border-red-500" : "border-gray-300"
                     }`}
-                    placeholder="Enter your full name"
+                    placeholder={t("contact.form.namePlaceholder")}
                   />
                   {errors.name && (
                     <p className="mt-1 text-sm text-red-600">{errors.name}</p>
@@ -217,8 +242,11 @@ export default function ContactForm() {
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email *
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    {t("contact.form.email")}
                   </label>
                   <input
                     type="email"
@@ -227,9 +255,9 @@ export default function ContactForm() {
                     value={formData.email}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 border rounded-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent ${
-                      errors.email ? 'border-red-500' : 'border-gray-300'
+                      errors.email ? "border-red-500" : "border-gray-300"
                     }`}
-                    placeholder="Enter your email address"
+                    placeholder={t("contact.form.emailPlaceholder")}
                   />
                   {errors.email && (
                     <p className="mt-1 text-sm text-red-600">{errors.email}</p>
@@ -237,8 +265,11 @@ export default function ContactForm() {
                 </div>
 
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone (with international code) *
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    {t("contact.form.phone")}
                   </label>
                   <input
                     type="tel"
@@ -247,9 +278,9 @@ export default function ContactForm() {
                     value={formData.phone}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 border rounded-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent ${
-                      errors.phone ? 'border-red-500' : 'border-gray-300'
+                      errors.phone ? "border-red-500" : "border-gray-300"
                     }`}
-                    placeholder="Ex: +1 754-204-3713"
+                    placeholder={t("contact.form.phonePlaceholder")}
                   />
                   {errors.phone && (
                     <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
@@ -257,8 +288,11 @@ export default function ContactForm() {
                 </div>
 
                 <div>
-                  <label htmlFor="service" className="block text-sm font-medium text-gray-700 mb-2">
-                    Service of Interest *
+                  <label
+                    htmlFor="service"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    {t("contact.form.service")}
                   </label>
                   <select
                     id="service"
@@ -266,26 +300,47 @@ export default function ContactForm() {
                     value={formData.service}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 border rounded-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent ${
-                      errors.service ? 'border-red-500' : 'border-gray-300'
+                      errors.service ? "border-red-500" : "border-gray-300"
                     }`}
                   >
-                    <option value="">Select a service</option>
-                    <option value="compra">Property Purchase</option>
-                    <option value="venta">Property Sale</option>
-                    <option value="gestion">Management and Leasing</option>
-                    <option value="corporativo">Corporate Services</option>
-                    <option value="legal">Legal Services</option>
-                    <option value="proyecto">Custom Projects</option>
-                    <option value="consulta">General Consultation</option>
+                    <option value="">
+                      {t("contact.form.servicePlaceholder")}
+                    </option>
+                    <option value="compra">
+                      {t("contact.form.services.purchase")}
+                    </option>
+                    <option value="venta">
+                      {t("contact.form.services.sale")}
+                    </option>
+                    <option value="gestion">
+                      {t("contact.form.services.management")}
+                    </option>
+                    <option value="corporativo">
+                      {t("contact.form.services.corporate")}
+                    </option>
+                    <option value="legal">
+                      {t("contact.form.services.legal")}
+                    </option>
+                    <option value="proyecto">
+                      {t("contact.form.services.project")}
+                    </option>
+                    <option value="consulta">
+                      {t("contact.form.services.consultation")}
+                    </option>
                   </select>
                   {errors.service && (
-                    <p className="mt-1 text-sm text-red-600">{errors.service}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.service}
+                    </p>
                   )}
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                    Brief Message *
+                  <label
+                    htmlFor="message"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    {t("contact.form.message")}
                   </label>
                   <textarea
                     id="message"
@@ -294,12 +349,14 @@ export default function ContactForm() {
                     value={formData.message}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 border rounded-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent ${
-                      errors.message ? 'border-red-500' : 'border-gray-300'
+                      errors.message ? "border-red-500" : "border-gray-300"
                     }`}
-                    placeholder="Tell us about your real estate needs..."
+                    placeholder={t("contact.form.messagePlaceholder")}
                   />
                   {errors.message && (
-                    <p className="mt-1 text-sm text-red-600">{errors.message}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.message}
+                    </p>
                   )}
                 </div>
 
@@ -309,11 +366,11 @@ export default function ContactForm() {
                   className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white py-4 px-6 rounded-lg font-bold transition-all duration-200 active:scale-95 active:shadow-inner disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                 >
                   {isSubmitting ? (
-                    <span>Sending Message...</span>
+                    <span>{t("contact.form.sending")}</span>
                   ) : (
                     <>
                       <Send className="w-5 h-5 mr-2" />
-                      Send Message
+                      {t("contact.form.submit")}
                     </>
                   )}
                 </button>

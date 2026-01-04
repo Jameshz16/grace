@@ -1,59 +1,65 @@
-import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import { useState } from "react";
+import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
-interface Testimonial {
+interface TestimonialBase {
   id: number;
   name: string;
-  origin: string;
-  text: string;
   rating: number;
   photo?: string;
 }
 
-const testimonios: Testimonial[] = [
+const testimoniosBase: TestimonialBase[] = [
   {
     id: 1,
-    name: 'Carlos Rodriguez',
-    origin: 'Miami, FL',
-    text: 'Grace helped us find the perfect home for our family. Her market knowledge and Spanish-speaking service made the entire process very easy. Highly recommended!',
+    name: "Carlos Rodriguez",
     rating: 5,
-    photo: 'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=300&auto=format&fit=crop'
+    photo:
+      "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=300&auto=format&fit=crop",
   },
   {
     id: 2,
-    name: 'Maria Gonzalez',
-    origin: 'Plantation, FL',
-    text: 'I sold my property in record time and above listing price. Grace is very professional and perfectly understands the needs of Latinos in Florida.',
+    name: "Maria Gonzalez",
     rating: 5,
-    photo: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=300&auto=format&fit=crop'
+    photo:
+      "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=300&auto=format&fit=crop",
   },
   {
     id: 3,
-    name: 'Roberto Silva',
-    origin: 'Bogotá, Colombia',
-    text: 'As a foreign investor, Grace provided me with all the guidance necessary to buy my first property in the USA. Her network of contacts was fundamental to success.',
+    name: "Roberto Silva",
     rating: 5,
-    photo: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=300&auto=format&fit=crop'
+    photo:
+      "https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=300&auto=format&fit=crop",
   },
   {
     id: 4,
-    name: 'Ana Martinez',
-    origin: 'Fort Lauderdale, FL',
-    text: "Grace's property management service is excellent. It has saved me time and money while maximizing my rental income. A complete and reliable service.",
+    name: "Ana Martinez",
     rating: 5,
-    photo: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=300&auto=format&fit=crop'
-  }
+    photo:
+      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=300&auto=format&fit=crop",
+  },
 ];
 
 export default function Testimonios() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { t } = useLanguage();
+
+  const translatedItems = t("testimonials.items") as unknown as any[];
+
+  const testimonios = testimoniosBase.map((item, index) => ({
+    ...item,
+    text: translatedItems[index]?.text || "",
+    origin: translatedItems[index]?.origin || "",
+  }));
 
   const nextTestimonial = () => {
     setCurrentIndex((prev) => (prev + 1) % testimonios.length);
   };
 
   const prevTestimonial = () => {
-    setCurrentIndex((prev) => (prev - 1 + testimonios.length) % testimonios.length);
+    setCurrentIndex(
+      (prev) => (prev - 1 + testimonios.length) % testimonios.length
+    );
   };
 
   const renderStars = (rating: number) => {
@@ -61,7 +67,9 @@ export default function Testimonios() {
       <Star
         key={i}
         size={16}
-        className={i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}
+        className={
+          i < rating ? "text-yellow-400 fill-current" : "text-gray-300"
+        }
       />
     ));
   };
@@ -71,10 +79,10 @@ export default function Testimonios() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">
-            What Our Clients Say
+            {t("testimonials.title")}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Hear from clients who have trusted us with their real estate investments
+            {t("testimonials.subtitle")}
           </p>
         </div>
 
@@ -92,7 +100,10 @@ export default function Testimonios() {
                 ) : (
                   <div className="w-20 h-20 rounded-full mx-auto bg-gradient-to-br from-blue-400 to-blue-600 border-4 border-yellow-400 flex items-center justify-center">
                     <span className="text-white text-xl font-bold">
-                      {testimonios[currentIndex].name.split(' ').map(n => n[0]).join('')}
+                      {testimonios[currentIndex].name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
                     </span>
                   </div>
                 )}
@@ -141,14 +152,12 @@ export default function Testimonios() {
                 key={index}
                 onClick={() => setCurrentIndex(index)}
                 className={`w-3 h-3 rounded-full transition-colors duration-200 ${
-                  index === currentIndex ? 'bg-blue-600' : 'bg-gray-300'
+                  index === currentIndex ? "bg-blue-600" : "bg-gray-300"
                 }`}
               />
             ))}
           </div>
         </div>
-
-
       </div>
     </section>
   );

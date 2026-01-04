@@ -1,5 +1,6 @@
-import { Calendar, Home, Users, Award } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
+import { Calendar, Home, Users, Award } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Custom hook for counter animation
 function useAnimatedCounter(target: number, duration = 2000) {
@@ -38,10 +39,20 @@ function useAnimatedCounter(target: number, duration = 2000) {
 }
 
 // Animated Counter Component
-function AnimatedCounter({ number, text, icon: Icon, index }: { number: string, text: string, icon: any, index: number }) {
+function AnimatedCounter({
+  number,
+  text,
+  icon: Icon,
+  index,
+}: {
+  number: string;
+  text: string;
+  icon: any;
+  index: number;
+}) {
   // Extract numeric value from strings like "15+", "500+", "100%"
-  const numericValue = parseInt(number.replace(/\D/g, '')) || 0;
-  const suffix = number.replace(/[0-9]/g, '');
+  const numericValue = parseInt(number.replace(/\D/g, "")) || 0;
+  const suffix = number.replace(/[0-9]/g, "");
   const { count, ref } = useAnimatedCounter(numericValue);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -51,10 +62,10 @@ function AnimatedCounter({ number, text, icon: Icon, index }: { number: string, 
   }, [index]);
 
   return (
-    <div 
-      ref={ref} 
+    <div
+      ref={ref}
       className={`text-center transform transition-all duration-700 ${
-        isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+        isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
       }`}
       style={{ transitionDelay: `${index * 100}ms` }}
     >
@@ -62,37 +73,38 @@ function AnimatedCounter({ number, text, icon: Icon, index }: { number: string, 
         <Icon className="w-8 h-8 text-blue-600" />
       </div>
       <div className="text-3xl font-bold text-blue-900 mb-2">
-        {count}{suffix}
+        {count}
+        {suffix}
       </div>
-      <div className="text-gray-600 font-medium">
-        {text}
-      </div>
+      <div className="text-gray-600 font-medium">{text}</div>
     </div>
   );
 }
 
 export default function BarraConfianza() {
+  const { t } = useLanguage();
+
   const stats = [
     {
       icon: Calendar,
       number: "15+",
-      text: "years of experience"
+      text: t("trustBar.years"),
     },
     {
       icon: Home,
       number: "500+",
-      text: "properties sold"
+      text: t("trustBar.sold"),
     },
     {
       icon: Users,
       number: "100%",
-      text: "Spanish-speaking service"
+      text: t("trustBar.service"),
     },
     {
       icon: Award,
       number: "360°",
-      text: "comprehensive service"
-    }
+      text: t("trustBar.comprehensive"),
+    },
   ];
 
   return (

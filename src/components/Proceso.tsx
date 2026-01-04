@@ -1,31 +1,34 @@
-import { Search, Handshake, FileText, LifeBuoy } from 'lucide-react';
+import { Search, Handshake, FileText, LifeBuoy } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function Proceso() {
+  const { t } = useLanguage();
+
   const pasos = [
     {
       numero: 1,
       icon: Search,
-      titulo: "Initial Consultation",
-      descripcion: "We understand your needs and objectives"
+      titulo: t("process.steps.step1.title"),
+      descripcion: t("process.steps.step1.description"),
     },
     {
       numero: 2,
-      icon: Search,
-      titulo: "Personalized Search",
-      descripcion: "We select the best options for you"
+      icon: Search, // Note: In original code it was Search again? Yes. Just keeping it.
+      titulo: t("process.steps.step2.title"),
+      descripcion: t("process.steps.step2.description"),
     },
     {
       numero: 3,
       icon: Handshake,
-      titulo: "Negotiation and Closing",
-      descripcion: "We handle all legal and financial details"
+      titulo: t("process.steps.step3.title"),
+      descripcion: t("process.steps.step3.description"),
     },
     {
       numero: 4,
       icon: LifeBuoy,
-      titulo: "Continuous Support",
-      descripcion: "We accompany you after closing with management and advice"
-    }
+      titulo: t("process.steps.step4.title"),
+      descripcion: t("process.steps.step4.description"),
+    },
   ];
 
   return (
@@ -33,10 +36,10 @@ export default function Proceso() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">
-            Your Path to Property Ownership in 4 Simple Steps
+            {t("process.title")}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            We've perfected our process to make your real estate experience as simple and successful as possible
+            {t("process.subtitle")}
           </p>
         </div>
 
@@ -48,17 +51,28 @@ export default function Proceso() {
             {pasos.map((paso, index) => {
               const Icon = paso.icon;
               return (
-                <div key={index} className={`flex flex-col lg:flex-row items-center ${
-                  index % 2 === 1 ? 'lg:flex-row-reverse' : ''
-                }`}>
+                <div
+                  key={index}
+                  className={`flex flex-col lg:flex-row items-center ${
+                    index % 2 === 1 ? "lg:flex-row-reverse" : ""
+                  }`}
+                >
                   {/* Content */}
-                  <div className={`w-full lg:w-5/12 mb-8 lg:mb-0 ${
-                    index % 2 === 0 ? 'lg:pr-8 lg:text-right' : 'lg:pl-8 lg:text-left'
-                  }`}>
+                  <div
+                    className={`w-full lg:w-5/12 mb-8 lg:mb-0 ${
+                      index % 2 === 0
+                        ? "lg:pr-8 lg:text-right"
+                        : "lg:pl-8 lg:text-left"
+                    }`}
+                  >
                     <div className="bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow duration-200">
-                      <div className={`flex items-center ${
-                        index % 2 === 0 ? 'lg:justify-end' : 'lg:justify-start'
-                      } mb-4`}>
+                      <div
+                        className={`flex items-center ${
+                          index % 2 === 0
+                            ? "lg:justify-end"
+                            : "lg:justify-start"
+                        } mb-4`}
+                      >
                         <div className="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg mr-4">
                           {paso.numero}
                         </div>
@@ -67,9 +81,7 @@ export default function Proceso() {
                       <h3 className="text-xl font-bold text-gray-900 mb-3">
                         {paso.titulo}
                       </h3>
-                      <p className="text-gray-600">
-                        {paso.descripcion}
-                      </p>
+                      <p className="text-gray-600">{paso.descripcion}</p>
                     </div>
                   </div>
 
@@ -89,25 +101,34 @@ export default function Proceso() {
         <div className="text-center mt-16">
           <div className="bg-blue-50 rounded-lg p-8 max-w-4xl mx-auto">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Ready to Take the First Step?
+              {t("process.ctaTitle")}
             </h3>
-            <p className="text-gray-600 mb-6">
-              Schedule your free initial consultation and discover how we can help you reach your real estate goals in Florida.
-            </p>
+            <p className="text-gray-600 mb-6">{t("process.ctaText")}</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button onClick={() => {
-                const message = "Hello, I would like to schedule a free consultation about real estate in Florida.";
-                const whatsappUrl = `https://wa.me/17542043713?text=${encodeURIComponent(message)}`;
-                window.open(whatsappUrl, '_blank');
-              }} className="bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white px-8 py-3 rounded-lg font-bold transition-all duration-200 active:scale-95 active:shadow-inner">
-                Schedule Initial Consultation
+              <button
+                onClick={() => {
+                  const message = t("nav.whatsappMessage");
+                  const whatsappUrl = `https://wa.me/17542043713?text=${encodeURIComponent(
+                    message
+                  )}`;
+                  window.open(whatsappUrl, "_blank");
+                }}
+                className="bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white px-8 py-3 rounded-lg font-bold transition-all duration-200 active:scale-95 active:shadow-inner"
+              >
+                {t("process.ctaButton1")}
               </button>
-              <button onClick={() => {
-                const message = "Hello, I would like to learn more about your real estate services in Florida.";
-                const whatsappUrl = `https://wa.me/17542043713?text=${encodeURIComponent(message)}`;
-                window.open(whatsappUrl, '_blank');
-              }} className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white active:bg-blue-700 active:text-white px-8 py-3 rounded-lg font-bold transition-all duration-200 active:scale-95 active:shadow-inner">
-                Learn More About Us
+              <button
+                onClick={() => {
+                  const message =
+                    "Hello, I would like to learn more about your real estate services in Florida.";
+                  const whatsappUrl = `https://wa.me/17542043713?text=${encodeURIComponent(
+                    message
+                  )}`;
+                  window.open(whatsappUrl, "_blank");
+                }}
+                className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white active:bg-blue-700 active:text-white px-8 py-3 rounded-lg font-bold transition-all duration-200 active:scale-95 active:shadow-inner"
+              >
+                {t("process.ctaButton2")}
               </button>
             </div>
           </div>
